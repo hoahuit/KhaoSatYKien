@@ -17,10 +17,9 @@ ini_set('display_errors', 1);
 
 // Lấy thông tin người dùng
 $user_id = $_SESSION["user_id"];
-$sql = "SELECT t.LoaiNguoiDung, t.MaSV, t.MaNV, t.TenDangNhap,
+$sql = "SELECT t.LoaiNguoiDung, t.MaSV, t.TenDangNhap,
         (SELECT COUNT(*) FROM CauHoi) as TongSoCauHoi,
-        (SELECT COUNT(*) FROM KhaoSatSV WHERE MaSV = t.MaSV) + 
-        (SELECT COUNT(*) FROM KhaoSatNV WHERE MaNV = t.MaNV) as SoCauDaLam
+        (SELECT COUNT(*) FROM KhaoSatSV WHERE MaSV = t.MaSV) as SoCauDaLam
         FROM TaiKhoan t 
         WHERE t.MaTK = ?";
 $params = array($user_id);

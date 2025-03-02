@@ -18,7 +18,7 @@ ini_set('display_errors', 1);
 $user_id = $_SESSION["user_id"];
 
 // Xác định loại người dùng từ bảng TaiKhoan
-$sql_user = "SELECT LoaiNguoiDung, MaSV, MaNV FROM TaiKhoan WHERE MaTK = ?";
+$sql_user = "SELECT LoaiNguoiDung, MaSV FROM TaiKhoan WHERE MaTK = ?";
 $stmt_user = sqlsrv_query($conn, $sql_user, array($user_id));
 if ($stmt_user === false) {
     die(print_r(sqlsrv_errors(), true));
@@ -59,8 +59,7 @@ ob_start();
                  WHERE ch.MaLoaiCauHoi = lch.MaLoaiCauHoi 
                  AND ch.IdCauHoi IN (
                     SELECT IdCauHoi FROM KhaoSatSV WHERE MaSV = ? AND ? = 1
-                    UNION
-                    SELECT IdCauHoi FROM KhaoSatNV WHERE MaNV = ? AND ? = 2
+            
                  )
                 ) as SoCauHoiDaLam
                 FROM LoaiCauHoi lch
@@ -69,9 +68,8 @@ ob_start();
         
         $params = array(
             $user_type == 1 ? $user_info['MaSV'] : 0,
-            $user_type,
-            $user_type == 2 ? $user_info['MaNV'] : 0,
             $user_type
+
         );
         $stmt = sqlsrv_query($conn, $sql, $params);
         

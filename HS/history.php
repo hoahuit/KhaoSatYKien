@@ -17,7 +17,7 @@ ini_set('display_errors', 1);
 
 // Lấy thông tin người dùng
 $user_id = $_SESSION["user_id"];
-$sql = "SELECT t.LoaiNguoiDung, t.MaSV, t.MaNV
+$sql = "SELECT t.LoaiNguoiDung, t.MaSV
         FROM TaiKhoan t 
         WHERE t.MaTK = ?";
 $params = array($user_id);
@@ -33,9 +33,9 @@ if ($row === false) {
 }
 
 $user_type = $row["LoaiNguoiDung"];
-$user_identifier = $user_type == 1 ? $row["MaSV"] : $row["MaNV"];
+$user_identifier = $row["MaSV"]; // Chỉ lấy MaSV vì chỉ có bảng KhaoSatSV
 
-// Truy vấn lịch sử khảo sát
+// Truy vấn lịch sử khảo sát - chỉ từ bảng KhaoSatSV
 $sql_history = "
     SELECT 
         lch.ChuDe,
@@ -47,20 +47,9 @@ $sql_history = "
     JOIN LoaiCauHoi lch ON ch.MaLoaiCauHoi = lch.MaLoaiCauHoi
     JOIN PhuongAnTraLoi pa ON k.IdPhuongAn = pa.IdPhuongAn
     WHERE k.MaSV = ?
-    UNION
-    SELECT 
-        lch.ChuDe,
-        ch.NoiDungCauHoi,
-        k.ThoiGian AS NgayThucHien,
-        pa.NoiDungTraLoi AS DapAn
-    FROM KhaoSatNV k
-    JOIN CauHoi ch ON k.IdCauHoi = ch.IdCauHoi
-    JOIN LoaiCauHoi lch ON ch.MaLoaiCauHoi = lch.MaLoaiCauHoi
-    JOIN PhuongAnTraLoi pa ON k.IdPhuongAn = pa.IdPhuongAn
-    WHERE k.MaNV = ?
     ORDER BY NgayThucHien DESC";
 
-$params_history = array($user_identifier, $user_identifier);
+$params_history = array($user_identifier);
 $stmt_history = sqlsrv_query($conn, $sql_history, $params_history);
 
 // Kiểm tra xem truy vấn có thành công không

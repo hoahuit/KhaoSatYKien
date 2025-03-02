@@ -8,14 +8,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
     // Truy vấn để lấy thông tin tài khoản
-    $sql = "SELECT MaTK, MatKhau FROM TaiKhoan WHERE TenDangNhap = ?";
+    $sql = "SELECT MaTK, MatKhau FROM TaiKhoan WHERE loainguoidung = 1 AND TenDangNhap = ?";
     $params = array($username);
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     // Kiểm tra kết quả truy vấn
     if ($stmt && $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         // Xác thực mật khẩu
-        if (password_verify($password, $row["MatKhau"])) {
+        if ($password== $row["MatKhau"]) {
             // Lưu thông tin người dùng vào session
             $_SESSION["user_id"] = $row["MaTK"];
             $_SESSION["username"] = $username;

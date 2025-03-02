@@ -21,7 +21,7 @@ if (!$topic_id) {
     exit();
 }
 
-$sql_user = "SELECT LoaiNguoiDung, MaSV, MaNV FROM TaiKhoan WHERE MaTK = ?";
+$sql_user = "SELECT LoaiNguoiDung, MaSV FROM TaiKhoan WHERE MaTK = ?";
 $stmt_user = sqlsrv_query($conn, $sql_user, array($user_id));
 if ($stmt_user === false) {
     die(print_r(sqlsrv_errors(), true));
@@ -38,9 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($user_type == 1) {
             $params[] = $user_info['MaSV'];
             $sql_insert = "INSERT INTO KhaoSatSV (IdCauHoi, IdPhuongAn, MaSV, ThoiGian) VALUES (?, ?, ?, GETDATE())";
-        } else if ($user_type == 2) {
-            $params[] = $user_info['MaNV'];
-            $sql_insert = "INSERT INTO KhaoSatNV (IdCauHoi, IdPhuongAn, MaNV, ThoiGian) VALUES (?, ?, ?, GETDATE())";
+        
         }
 
         $stmt_insert = sqlsrv_query($conn, $sql_insert, $params);
@@ -60,11 +58,10 @@ $sql_questions = "SELECT ch.IdCauHoi, ch.NoiDungCauHoi, lch.ChuDe, lch.MaLoaiCau
                  WHERE ch.MaLoaiCauHoi = ?
                  AND ch.IdCauHoi NOT IN (
                     SELECT IdCauHoi FROM KhaoSatSV WHERE MaSV = ? AND ? = 1
-                    UNION
-                    SELECT IdCauHoi FROM KhaoSatNV WHERE MaNV = ? AND ? = 2
+                  
                  )
                  ORDER BY ch.IdCauHoi";
-$params = array($topic_id, $user_type == 1 ? $user_info['MaSV'] : 0, $user_type, $user_type == 2 ? $user_info['MaNV'] : 0, $user_type);
+$params = array($topic_id, $user_type == 1 ? $user_info['MaSV'] : 0, $user_type);
 $stmt_questions = sqlsrv_query($conn, $sql_questions, $params);
 if ($stmt_questions === false) {
     die(print_r(sqlsrv_errors(), true));

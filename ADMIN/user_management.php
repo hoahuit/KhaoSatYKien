@@ -13,26 +13,43 @@ if ($conn === false) {
     die("Connection failed: " . print_r(sqlsrv_errors(), true));
 }
 
-// Truy vấn lấy danh sách người dùng từ bảng TaiKhoan, liên kết với SinhVien và Admin
+// Truy vấn lấy danh sách người dùng
 $sql = "SELECT tk.MaTK, tk.TenDangNhap, tk.MatKhau, tk.LoaiNguoiDung, 
                tk.MaSV, sv.TenSV, tk.MaAdmin, ad.TenNV 
         FROM [dbo].[TaiKhoan] tk 
-        INNER JOIN [dbo].[SinhVien] sv ON tk.MaSV = sv.MaSV 
-        LEFT JOIN [dbo].[Admin] ad ON tk.MaAdmin = ad.MaAdmin And tk.LoaiNguoiDung = 2 ";
+        LEFT JOIN [dbo].[SinhVien] sv ON tk.MaSV = sv.MaSV 
+        LEFT JOIN [dbo].[Admin] ad ON tk.MaAdmin = ad.MaAdmin";
 $result = sqlsrv_query($conn, $sql);
+
 if ($result === false) {
     die("Query failed: " . print_r(sqlsrv_errors(), true));
 }
 
-$page_title = "Quản Lý Người Dùng"; // Đặt tiêu đề trang
-
-// Chuẩn bị nội dung chính để đưa vào layout
+$page_title = "Quản Lý Người Dùng";
 ob_start();
 ?>
 
 <header>
     <h1>Quản Lý Người Dùng</h1>
 </header>
+
+<!-- Thêm thông báo thành công -->
+<?php
+if (isset($_GET['success'])) {
+    switch ($_GET['success']) {
+        case 1:
+            echo "<p class='success'>Thêm người dùng thành công!</p>";
+            break;
+        case 2:
+            echo "<p class='success'>Cập nhật thông tin người dùng thành công!</p>";
+            break;
+        case 3:
+            echo "<p class='success'>Xóa người dùng thành công!</p>";
+            break;
+    }
+}
+?>
+
 <div class="card">
     <h3>Danh Sách Người Dùng</h3>
     <table>
@@ -48,7 +65,10 @@ ob_start();
             </tr>
         </thead>
         <tbody>
-            <?php while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) { ?>
+            <?php 
+            if ($result && sqlsrv_has_rows($result)) {
+                while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) { 
+            ?>
                 <tr>
                     <td><?php echo $row['MaTK']; ?></td>
                     <td><?php echo $row['TenDangNhap']; ?></td>
@@ -63,11 +83,15 @@ ob_start();
                            <i class="fas fa-trash"></i> Xóa</a>
                     </td>
                 </tr>
-            <?php } ?>
+            <?php 
+                }
+            } else {
+                echo "<tr><td colspan='9'>Không có dữ liệu người dùng.</td></tr>";
+            }
+            ?>
         </tbody>
     </table>
-    <br>
-    <a href="add_user.php"><i class="fas fa-plus"></i> Thêm Người Dùng</a>
+    <a href="add_user.php" class="btn-add"><i class="fas fa-plus"></i> Thêm Người Dùng</a>
 </div>
 
 <?php
@@ -76,7 +100,9 @@ $content = ob_get_clean();
 // Include layout với nội dung
 include 'layout.php';
 
-// Giải phóng tài nguyên
-sqlsrv_free_stmt($result);
+// Giải phóng tài nguyên chỉ khi $result tồn tại và là resource hợp lệ
+if ($result !== false) {
+    sqlsrv_free_stmt($result);
+}
 sqlsrv_close($conn);
 ?>

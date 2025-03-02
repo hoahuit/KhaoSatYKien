@@ -8,18 +8,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
 
     // Truy vấn để lấy thông tin tài khoản
-    $sql = "SELECT MaTK, MatKhau FROM TaiKhoan WHERE TenDangNhap = ?";
+    $sql = "SELECT MaTK, MatKhau FROM TaiKhoan WHERE loainguoidung = 2 AND TenDangNhap = ?";
     $params = array($username);
     $stmt = sqlsrv_query($conn, $sql, $params);
 
     // Kiểm tra kết quả truy vấn
     if ($stmt && $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         // Xác thực mật khẩu
-        if (password_verify($password, $row["MatKhau"])) {
+        if ($password== $row["MatKhau"]) {
             // Lưu thông tin người dùng vào session
             $_SESSION["user_id"] = $row["MaTK"];
             $_SESSION["username"] = $username;
-            header("Location: dashboardadmin.php");
+            header("Location: dashboard.php");
             exit();
         } else {
             // Thông báo lỗi mật khẩu không đúng
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 30px; /* Giảm padding */
             border-radius: 10px; /* Giảm bo tròn góc */
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); /* Giảm độ đổ bóng */
-            width: 450px; /* Giảm kích thước */
+            width: 500px; /* Giảm kích thước */
             text-align: center;
         }
         .login-container img {
@@ -140,8 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <strong>Khảo sát trực tuyến</strong>
         <h2>Đăng nhập cho Nhân viên</h2> <!-- Đổi tiêu đề cho Nhân viên -->
         <form action="" method="POST">
-            <input id="username" type="text" name="username" placeholder="Tên đăng nhập" required>
-            <input id="password" type="password" name="password" placeholder="Mật khẩu" required>
+            <input style="width: 90%;" id="username" type="text" name="username" placeholder="Tên đăng nhập" required>
+            <input style="width: 90%; id="password" type="password" name="password" placeholder="Mật khẩu" required>
             <button id="login-button" type="submit">Đăng nhập</button>
         </form>
     </div>
