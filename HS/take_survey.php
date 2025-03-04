@@ -56,9 +56,9 @@ $sql_questions = "SELECT ch.IdCauHoi, ch.NoiDungCauHoi, lch.ChuDe, lch.MaLoaiCau
                  FROM CauHoi ch 
                  JOIN LoaiCauHoi lch ON ch.MaLoaiCauHoi = lch.MaLoaiCauHoi 
                  WHERE ch.MaLoaiCauHoi = ?
+                 AND (ch.ThoiGianHetHan IS NULL OR ch.ThoiGianHetHan > GETDATE())
                  AND ch.IdCauHoi NOT IN (
                     SELECT IdCauHoi FROM KhaoSatSV WHERE MaSV = ? AND ? = 1
-                  
                  )
                  ORDER BY ch.IdCauHoi";
 $params = array($topic_id, $user_type == 1 ? $user_info['MaSV'] : 0, $user_type);
@@ -79,11 +79,11 @@ if (empty($questions)) {
 }
 
 $fixed_answers = array(
-    array('IdPhuongAn' => 1, 'NoiDungTraLoi' => 'Hoàn toàn không đồng ý', 'MucDoDanhGia' => 'Mức độ 1'),
-    array('IdPhuongAn' => 2, 'NoiDungTraLoi' => 'Không đồng ý', 'MucDoDanhGia' => 'Mức độ 2'),
-    array('IdPhuongAn' => 3, 'NoiDungTraLoi' => 'Đồng ý một phần', 'MucDoDanhGia' => 'Mức độ 3'),
-    array('IdPhuongAn' => 4, 'NoiDungTraLoi' => 'Đồng ý', 'MucDoDanhGia' => 'Mức độ 4'),
-    array('IdPhuongAn' => 5, 'NoiDungTraLoi' => 'Hoàn toàn đồng ý', 'MucDoDanhGia' => 'Mức độ 5')
+    array('IdPhuongAn' => 23, 'NoiDungTraLoi' => 'Hoàn toàn không đồng ý', 'MucDoDanhGia' => 'Mức độ 1'),
+    array('IdPhuongAn' => 24, 'NoiDungTraLoi' => 'Không đồng ý', 'MucDoDanhGia' => 'Mức độ 2'),
+    array('IdPhuongAn' => 25, 'NoiDungTraLoi' => 'Đồng ý một phần', 'MucDoDanhGia' => 'Mức độ 3'),
+    array('IdPhuongAn' => 26, 'NoiDungTraLoi' => 'Đồng ý', 'MucDoDanhGia' => 'Mức độ 4'),
+    array('IdPhuongAn' => 27, 'NoiDungTraLoi' => 'Hoàn toàn đồng ý', 'MucDoDanhGia' => 'Mức độ 5')
 );
 
 ob_start();

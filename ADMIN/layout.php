@@ -10,12 +10,20 @@
     <style>
         :root {
             --primary-color: #4e73df;
+            --primary-dark: #2e59d9;
             --secondary-color: #1cc88a;
-            --dark-color: #2c3e50;
+            --dark-color: #1a1c23;
             --light-color: #f8f9fc;
             --danger-color: #e74a3b;
             --warning-color: #f6c23e;
             --info-color: #36b9cc;
+            --gray-100: #f8f9fc;
+            --gray-200: #eaecf4;
+            --gray-300: #dddfeb;
+            --gray-800: #2d3748;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,.1);
         }
         
         body {
@@ -51,21 +59,24 @@
         
         .sidebar {
             width: 280px;
-            background: linear-gradient(180deg, var(--dark-color), #1a252f);
+            background: var(--dark-color);
             color: #fff;
             position: fixed;
             height: 100vh;
             padding: 20px 0;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.2);
+            border-right: 1px solid var(--gray-800);
+            box-shadow: var(--shadow-lg);
             transition: all 0.3s ease;
             z-index: 1000;
             overflow-y: auto;
         }
         
         .sidebar h2 {
-            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            margin: -20px 0 20px;
+            padding: 20px;
+            font-size: 24px;
             text-align: center;
-            margin-bottom: 30px;
             color: #fff;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -74,15 +85,15 @@
         }
         
         .sidebar a {
-            color: rgba(255,255,255,0.8);
+            margin: 2px 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            color: var(--gray-300);
+            border-left: 3px solid transparent;
             text-decoration: none;
-            padding: 15px 25px;
             display: flex;
             align-items: center;
-            font-size: 16px;
-            border-radius: 5px;
-            margin: 8px 15px;
-            transition: all 0.3s ease;
         }
         
         .sidebar a i {
@@ -93,10 +104,9 @@
         }
         
         .sidebar a:hover, .sidebar a.active {
-            background-color: var(--primary-color);
-            color: #fff;
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: rgba(255,255,255,.05);
+            border-left-color: var(--primary-color);
+            transform: none;
         }
         
         .main-content {
@@ -110,16 +120,15 @@
         .card {
             background: #fff;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
             margin-bottom: 30px;
-            border: none;
-            transition: all 0.3s ease;
+            transition: all .2s ease;
         }
         
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-md);
         }
         
         .card h3 {
@@ -190,21 +199,21 @@
             margin-top: 20px;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid var(--gray-200);
         }
         
         th, td {
-            padding: 18px 25px;
+            padding: 15px 20px;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
         
         th {
-            background-color: var(--primary-color);
+            background: var(--gray-800);
             color: #fff;
             font-weight: 500;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 13px;
             letter-spacing: 1px;
         }
         
@@ -318,6 +327,55 @@
                 padding: 12px 15px;
             }
         }
+        
+        /* Thêm hiệu ứng loading */
+        .loading-bar {
+            height: 3px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: linear-gradient(to right, var(--primary-color), var(--info-color));
+            z-index: 9999;
+            animation: loading 1s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { width: 0; }
+            50% { width: 65%; }
+            100% { width: 100%; }
+        }
+        
+        /* Nút action mới */
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all .2s;
+        }
+        
+        .btn-edit {
+            background: rgba(78, 115, 223, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .btn-delete {
+            background: rgba(231, 74, 59, 0.1);
+            color: var(--danger-color);
+        }
+        
+        /* Thêm hiệu ứng skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
     </style>
 </head>
 <body>
@@ -336,8 +394,8 @@
         <a href="quanlycauhoi.php" <?php echo basename($_SERVER['PHP_SELF']) == 'quanlycauhoi.php' ? 'class="active"' : ''; ?>>
             <i class="fas fa-question-circle"></i> <span>Câu hỏi</span>
         </a>
-        <a href="#" <?php echo basename($_SERVER['PHP_SELF']) == 'settings.php' ? 'class="active"' : ''; ?>>
-            <i class="fas fa-cog"></i> <span>Cài đặt</span>
+        <a href="tabthongke.php" <?php echo basename($_SERVER['PHP_SELF']) == 'tabthongke.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-cog"></i> <span>Thống kê</span>
         </a>
         <a href="logout.php">
             <i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span>
@@ -357,54 +415,85 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Biểu đồ cho dashboard.php
+        // Thêm loading bar
+        const loadingBar = document.createElement('div');
+        loadingBar.className = 'loading-bar';
+        document.body.prepend(loadingBar);
+
+        // Hiệu ứng loading khi chuyển trang
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                loadingBar.style.display = 'block';
+            }
+        });
+
+        // Cải thiện biểu đồ
         if (document.getElementById('userQuestionChart')) {
+            Chart.defaults.font.family = "'Roboto', sans-serif";
+            Chart.defaults.font.size = 13;
+            
             const ctx = document.getElementById('userQuestionChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(78,115,223,0.6)');
+            gradient.addColorStop(1, 'rgba(78,115,223,0.1)');
+            
             const userQuestionChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
-                    labels: ['Số lượng câu hỏi', 'Số lượng người dùng', 'Số lượng kết quả khảo sát'],
+                    labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
                     datasets: [{
                         label: 'Thống Kê',
-                        data: [<?php echo $totalQuestions ?? 0; ?>, <?php echo $totalUsers ?? 0; ?>, <?php echo $totalResults ?? 0; ?>],
-                        backgroundColor: [
-                            'rgba(78, 115, 223, 0.7)',
-                            'rgba(28, 200, 138, 0.7)',
-                            'rgba(54, 185, 204, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgb(78, 115, 223)',
-                            'rgb(28, 200, 138)',
-                            'rgb(54, 185, 204)'
-                        ],
-                        borderWidth: 2,
-                        borderRadius: 5
+                        data: [65, 78, 66, 44, 56, 67, 75, 70, 90, 85, 80, 95],
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderColor: 'rgb(78,115,223)',
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#fff',
+                            titleColor: '#2d3748',
+                            bodyColor: '#2d3748',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Số lượng: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
-                        y: { 
+                        y: {
                             beginAtZero: true,
                             grid: {
-                                color: 'rgba(0, 0, 0, 0.05)'
+                                color: 'rgba(0,0,0,0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                padding: 10
                             }
                         },
                         x: {
                             grid: {
                                 display: false
+                            },
+                            ticks: {
+                                padding: 10
                             }
                         }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    animation: {
-                        duration: 2000,
-                        easing: 'easeOutQuart'
                     }
                 }
             });

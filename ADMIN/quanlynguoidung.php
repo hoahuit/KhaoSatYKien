@@ -19,6 +19,16 @@ $sql = "SELECT tk.MaTK, tk.TenDangNhap, tk.MatKhau, tk.LoaiNguoiDung,
         FROM [dbo].[TaiKhoan] tk 
         INNER JOIN [dbo].[SinhVien] sv ON tk.MaSV = sv.MaSV 
         LEFT JOIN [dbo].[Admin] ad ON tk.MaAdmin = ad.MaAdmin And tk.LoaiNguoiDung = 2 ";
+
+// Xử lý tìm kiếm nếu có
+if (isset($_GET['search']) && !empty($_GET['search'])) {
+    $search = $_GET['search'];
+    $sql .= " WHERE tk.TenDangNhap LIKE '%$search%' 
+              OR sv.TenSV LIKE '%$search%' 
+              OR tk.MaSV LIKE '%$search%'
+              OR tk.MaTK LIKE '%$search%'";
+}
+
 $result = sqlsrv_query($conn, $sql);
 if ($result === false) {
     die("Query failed: " . print_r(sqlsrv_errors(), true));
@@ -35,6 +45,19 @@ ob_start();
 </header>
 <div class="card">
     <h3>Danh Sách Người Dùng</h3>
+    
+    <!-- Thêm form tìm kiếm -->
+    <div class="search-container">
+        <form action="" method="GET">
+            <input type="text" name="search" placeholder="Tìm kiếm theo tên, mã SV..." 
+                   value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+            <button type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <?php if(isset($_GET['search']) && !empty($_GET['search'])): ?>
+                <a href="quanlynguoidung.php" class="reset-search">Xóa tìm kiếm</a>
+            <?php endif; ?>
+        </form>
+    </div>
+    
     <table>
         <thead>
             <tr>
@@ -80,3 +103,39 @@ include 'layout.php';
 sqlsrv_free_stmt($result);
 sqlsrv_close($conn);
 ?>
+
+<style>
+.search-container {
+    margin-bottom: 20px;
+}
+
+.search-container input[type="text"] {
+    padding: 8px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.search-container button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #45a049;
+}
+
+.reset-search {
+    margin-left: 10px;
+    color: #666;
+    text-decoration: none;
+}
+
+.reset-search:hover {
+    text-decoration: underline;
+}
+</style>

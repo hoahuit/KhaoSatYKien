@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHINEE IELTS - Hệ Thống Quản Lý</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fc;
+            --accent-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+        
+        .title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .datetime {
+            margin-right: 20px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+        
+        .menu-container {
+            background-color: var(--dark-color);
+            padding: 0;
+        }
+        
+        .navbar {
+            padding: 0;
+        }
+        
+        .navbar-nav .nav-item .nav-link {
+            color: white;
+            padding: 0.8rem 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .navbar-nav .nav-item .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .dropdown-menu {
+            background-color: var(--dark-color);
+            border: none;
+            border-radius: 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .dropdown-item {
+            color: white;
+            padding: 0.7rem 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: url('background.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+        
+        .main-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.8);
+            z-index: 1;
+        }
+        
+        .welcome-container {
+            text-align: center;
+            z-index: 2;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            max-width: 800px;
+        }
+        
+        .welcome-image {
+            width: 200px;
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-title {
+            font-size: 2rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .welcome-subtitle {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            width: 180px;
+            transition: all 0.3s;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .stat-label {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img src="shinee_logo.png" alt="SHINEE IELTS Logo" class="logo">
+            <h1 class="title">HỆ THỐNG QUẢN LÝ KHOÁ HỌC VÀ HỌC VIÊN CỦA TRUNG TÂM SHINEE IELTS</h1>
+        </div>
+        <div class="user-info">
+            <div class="datetime" id="datetime">10:30 - 15/07/2023</div>
+            <div class="user">
+                <img src="user_avatar.jpg" alt="User Avatar" class="user-avatar">
+                <span>Admin</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="menu-container">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Hệ Thống
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Đăng Xuất</a></li>
+                                <li><a class="dropdown-item" href="#" id="findStudentLink"><i class="fas fa-search me-2"></i>Tìm Học Viên</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-power-off me-2"></i>Thoát</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Kế Toán Quản Lý Khoá Học
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-calculator me-2"></i>Lập Phiếu Tính Tiền</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-file-invoice me-2"></i>Lập Hoá Đơn</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" id="studentManagementLink">
+                                Quản Lý Danh Mục Học Viên
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user-graduate me-2"></i>Danh Sách Học Viên</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Thống Kê - Báo Cáo
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-chart-bar me-2"></i>Báo Cáo Doanh Thu</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-users me-2"></i>Báo Cáo Học Viên</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Kế Toán Tổng Hợp
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-money-bill-wave me-2"></i>Quản Lý Thu Chi</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Trợ Giúp
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-question-circle me-2"></i>Hướng Dẫn Sử Dụng</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-info-circle me-2"></i>Thông Tin Phần Mềm</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    
+    <div class="main-content">
+        <div class="welcome-container">
+            <img src="welcome_image.png" alt="Welcome" class="welcome-image">
+            <h2 class="welcome-title">Chào mừng đến với Hệ thống Quản lý</h2>
+            <p class="welcome-subtitle">TRUNG TÂM SHINEE IELTS</p>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                    <div class="stat-value">250</div>
+                    <div class="stat-label">Học viên</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-book"></i></div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Khoá học</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Giáo viên</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        &copy; 2023 SHINEE IELTS - Hệ Thống Quản Lý Khoá Học và Học Viên
+    </footer>
+
+    <!-- Student Management Modal (Form 2) -->
+    <div class="modal fade" id="studentManagementModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">QUẢN LÝ HỌC VIÊN</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text">Danh mục học viên</span>
+                                <select class="form-select" id="studentSelect">
+                                    <option value="">-- Chọn học viên --</option>
+                                    <option value="1">Nguyễn Văn A</option>
+                                    <option value="2">Trần Thị B</option>
+                                    <option value="3">Lê Văn C</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Thông tin học viên</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Mã học viên</label>
+                                        <input type="text" class="form-control" id="studentId">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Họ tên</label>
+                                        <input type="text" class="form-control" id="studentName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày sinh</label>
+                                        <input type="date" class="form-control" id="studentDob">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Số điện thoại</label>
+                                        <input type="text" class="form-control" id="studentPhone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="studentEmail">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Địa chỉ</label>
+                                        <textarea class="form-control" id="studentAddress" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Khoá học</label>
+                                        <select class="form-select" id="studentCourse">
+                                            <option value="">-- Chọn khoá học --</option>
+                                            <option value="1">IELTS Basic</option>
+                                            <option value="2">IELTS Intermediate</option>
+                                            <option value="3">IELTS Advanced</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Lớp học</label>
+                                        <select class="form-select" id="studentClass">
+                                            <option value="">-- Chọn lớp học --</option>
+                                            <option value="1">Basic 01</option>
+                                            <option value="2">Intermediate 02</option>
+                                            <option value="3">Advanced 03</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <button type="button" class="btn btn-success me-2"><i class="fas fa-plus me-2"></i>Thêm</button>
+                            <button type="button" class="btn btn-primary me-2"><i class="fas fa-edit me-2"></i>Sửa</button>
+                            <button type="button" class="btn btn-danger me-2"><i class="fas fa-trash-alt me-2"></i>Xoá</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Đóng</button>
+                            <button type="button" class="btn btn-warning"><i class="fas fa-power-off me-2"></i>Thoát chương trình</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Find Student Modal (Form 3) -->
+    <div class="modal fade" id="findStudentModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">TÌM THÔNG TIN HỌC VIÊN</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text">Chọn học viên</span>
+                                <select class="form-select" id="findStudentSelect">
+                                    <option value="">-- Chọn học viên --</option>
+                                    <option value="1">Nguyễn Văn A</option>
+                                    <option value="2">Trần Thị B</option>
+                                    <option value="3">Lê Văn C</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Mã HV</span>
+                                        <input type="text" class="form-control" id="findStudentId" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">SĐT</span>
+                                        <input type="text" class="form-control" id="findStudentPhone" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Thông tin chi tiết</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Mã học viên</label>
+                                        <input type="text" class="form-control" id="detailStudentId" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên học viên</label>
+                                        <input type="text" class="form-control" id="detailStudentName" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Lớp học</label>
+                                        <input type="text" class="form-control" id="detailStudentClass" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Khoá học</label>
+                                        <input type="text" class="form-control" id="detailStudentCourse" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Số điện thoại</label>
+                                <input type="text" class="form-control" id="detailStudentPhone" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">ĐĂNG NHẬP HỆ THỐNG</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <img src="shinee_logo.png" alt="SHINEE IELTS Logo" style="width: 120px;">
+                        <h4 class="mt-3">TRUNG TÂM SHINEE IELTS</h4>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" placeholder="Nhập tên đăng nhập">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Mật khẩu</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" placeholder="Nhập mật khẩu">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary w-100" id="loginBtn">ĐĂNG NHẬP</button>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <small>&copy; 2023 SHINEE IELTS - Hệ Thống Quản Lý</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Show login modal on page load
+        $(document).ready(function() {
+            $('#loginModal').modal('show');
+            
+            // Update date and time
+            function updateDateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+                const dateString = now.toLocaleDateString('vi-VN');
+                $('#datetime').text(timeString + ' - ' + dateString);
+            }
+            
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+            
+            // Login button click
+            $('#loginBtn').click(function() {
+                $('#loginModal').modal('hide');
+            });
+            
+            // Student Management link click
+            $('#studentManagementLink').click(function() {
+                $('#studentManagementModal').modal('show');
+            });
+            
+            // Find Student link click
+            $('#findStudentLink').click(function() {
+                $('#findStudentModal').modal('show');
+            });
+            
+            // Demo data for student selection
+            $('#studentSelect').change(function() {
+                const id = $(this).val();
+                if (id === '1') {
+                    $('#studentId').val('HV001');
+                    $('#studentName').val('Nguyễn Văn A');
+                    $('#studentDob').val('1995-05-15');
+                    $('#studentPhone').val('0901234567');
+                    $('#studentEmail').val('nguyenvana@example.com');
+                    $('#studentAddress').val('123 Nguyễn Huệ, Q1, TP.HCM');
+                    $('#studentCourse').val('2');
+                    $('#studentClass').val('2');
+                } else if (id === '2') {
+                    $('#studentId').val('HV002');
+                    $('#studentName').val('Trần Thị B');
+                    $('#studentDob').val('1998-10-20');
+                    $('#studentPhone').val('0909876543');
+                    $('#studentEmail').val('tranthib@example.com');
+                    $('#studentAddress').val('456 Lê Lợi, Q1, TP.HCM');
+                    $('#studentCourse').val('1');
+                    $('#studentClass').val('1');
+                }
+            });
+            
+            // Demo data for find student
+            $('#findStudentSelect').change(function() {
+                const id = $(this).val();
+                if (id === '1') {
+                    $('#findStudentId').val('HV001');
+                    $('#findStudentPhone').val('0901234567');
+                    $('#detailStudentId').val('HV001');
+                    $('#detailStudentName').val('Nguyễn Văn A');
+                    $('#detailStudentClass').val('Intermediate 02');
+                    $('#detailStudentCourse').val('IELTS Intermediate');
+                    $('#detailStudentPhone').val('0901234567');
+                } else if (id === '2') {
+                    $('#findStudentId').val('HV002');
+                    $('#findStudentPhone').val('0909876543');
+                    $('#detailStudentId').val('HV002');
+                    $('#detailStudentName').val('Trần Thị B');
+                    $('#detailStudentClass').val('Basic 01');
+                    $('#detailStudentCourse').val('IELTS Basic');
+                    $('#detailStudentPhone').val('0909876543');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

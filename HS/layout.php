@@ -158,9 +158,7 @@ if (!isset($_SESSION["user_id"])) {
                 <a href="HS/history.php" class="list-group-item list-group-item-action <?php echo basename($_SERVER['PHP_SELF']) == 'history.php' ? 'active' : ''; ?>">
                     <i class="fas fa-history me-2"></i>Lịch sử
                 </a>
-                <a href="HS/profile.php" class="list-group-item list-group-item-action <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-user me-2"></i>Hồ sơ
-                </a>
+       
             </div>
         </div>
     </div>
@@ -177,9 +175,7 @@ if (!isset($_SESSION["user_id"])) {
                 <a href="history.php" class="list-group-item list-group-item-action <?php echo basename($_SERVER['PHP_SELF']) == 'history.php' ? 'active' : ''; ?>">
                     <i class="fas fa-history me-2"></i>Lịch sử
                 </a>
-                <a href="profile.php" class="list-group-item list-group-item-action <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>">
-                    <i class="fas fa-user me-2"></i>Hồ sơ
-                </a>
+                
             </div>
         </div>
         <div class="main-content">

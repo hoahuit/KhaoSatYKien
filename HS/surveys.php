@@ -53,18 +53,24 @@ ob_start();
         <?php
         // Truy vấn danh sách chủ đề khảo sát
         $sql = "SELECT lch.MaLoaiCauHoi, lch.ChuDe,
-                (SELECT COUNT(*) FROM CauHoi WHERE MaLoaiCauHoi = lch.MaLoaiCauHoi) as TongSoCau,
-                (SELECT COUNT(*) 
-                 FROM CauHoi ch 
-                 WHERE ch.MaLoaiCauHoi = lch.MaLoaiCauHoi 
-                 AND ch.IdCauHoi IN (
-                    SELECT IdCauHoi FROM KhaoSatSV WHERE MaSV = ? AND ? = 1
-            
-                 )
-                ) as SoCauHoiDaLam
-                FROM LoaiCauHoi lch
-                WHERE EXISTS (SELECT 1 FROM CauHoi WHERE MaLoaiCauHoi = lch.MaLoaiCauHoi)
-                ORDER BY lch.MaLoaiCauHoi";
+        (SELECT COUNT(*) FROM CauHoi 
+         WHERE MaLoaiCauHoi = lch.MaLoaiCauHoi 
+         AND (ThoiGianHetHan IS NULL OR ThoiGianHetHan > GETDATE())) as TongSoCau,
+        (SELECT COUNT(*) 
+         FROM CauHoi ch 
+         WHERE ch.MaLoaiCauHoi = lch.MaLoaiCauHoi 
+         AND (ch.ThoiGianHetHan IS NULL OR ch.ThoiGianHetHan > GETDATE())
+         AND ch.IdCauHoi IN (
+            SELECT IdCauHoi FROM KhaoSatSV WHERE MaSV = ? AND ? = 1
+         )
+        ) as SoCauHoiDaLam
+        FROM LoaiCauHoi lch
+        WHERE EXISTS (
+            SELECT 1 FROM CauHoi 
+            WHERE MaLoaiCauHoi = lch.MaLoaiCauHoi 
+            AND (ThoiGianHetHan IS NULL OR ThoiGianHetHan > GETDATE())
+        )
+        ORDER BY lch.MaLoaiCauHoi";
         
         $params = array(
             $user_type == 1 ? $user_info['MaSV'] : 0,

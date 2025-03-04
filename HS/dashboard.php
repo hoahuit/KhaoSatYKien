@@ -15,13 +15,21 @@ include 'config.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Lấy thông tin người dùng
+// Lấy thông tin người dùng và thống kê câu hỏi
 $user_id = $_SESSION["user_id"];
-$sql = "SELECT t.LoaiNguoiDung, t.MaSV, t.TenDangNhap,
-        (SELECT COUNT(*) FROM CauHoi) as TongSoCauHoi,
-        (SELECT COUNT(*) FROM KhaoSatSV WHERE MaSV = t.MaSV) as SoCauDaLam
+$sql = "SELECT 
+            t.LoaiNguoiDung, 
+            t.MaSV, 
+            t.TenDangNhap,
+            (SELECT COUNT(*) FROM CauHoi) as TongSoCauHoi,
+            (SELECT COUNT(*) FROM CauHoi WHERE ThoiGianHetHan > GETDATE()) as CauHoiConHan,
+            (SELECT COUNT(*) FROM CauHoi WHERE ThoiGianHetHan <= GETDATE()) as CauHoiHetHan,
+            (SELECT COUNT(*) FROM KhaoSatSV ks 
+             INNER JOIN CauHoi ch ON ks.IdCauHoi = ch.IdCauHoi 
+             WHERE ks.MaSV = t.MaSV AND ch.ThoiGianHetHan > GETDATE()) as SoCauDaLam
         FROM TaiKhoan t 
         WHERE t.MaTK = ?";
+
 $params = array($user_id);
 $stmt = sqlsrv_query($conn, $sql, $params);
 
@@ -36,9 +44,11 @@ if ($row === false) {
 
 $user_type = $row["LoaiNguoiDung"];
 $total_questions = $row["TongSoCauHoi"];
+$active_questions = $row["CauHoiConHan"];
+$expired_questions = $row["CauHoiHetHan"];
 $answered_questions = $row["SoCauDaLam"];
-$user_name = $row["TenDangNhap"]; // Fetch the user's name
-$completion_rate = ($total_questions > 0) ? round(($answered_questions / $total_questions) * 100) : 0;
+$user_name = $row["TenDangNhap"];
+$completion_rate = ($active_questions > 0) ? round(($answered_questions / $active_questions) * 100) : 0;
 
 ob_start();
 ?>
@@ -62,7 +72,7 @@ ob_start();
     </div>
 
     <div class="row g-4 mb-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card hover-card h-100">
                 <div class="card-body text-center">
                     <img src="https://cdn-icons-png.flaticon.com/512/3126/3126647.png" 
@@ -72,23 +82,33 @@ ob_start();
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="card hover-card h-100">
+                <div class="card-body text-center">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3094/3094700.png" 
+                         alt="Active Questions" style="width: 64px; margin-bottom: 15px;">
+                    <h5 class="card-title">Câu hỏi còn hạn</h5>
+                    <h2 class="text-success"><?php echo $active_questions; ?></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="card hover-card h-100">
                 <div class="card-body text-center">
                     <img src="https://cdn-icons-png.flaticon.com/512/1441/1441333.png" 
                          alt="Answered Questions" style="width: 64px; margin-bottom: 15px;">
                     <h5 class="card-title">Đã trả lời</h5>
-                    <h2 class="text-success"><?php echo $answered_questions; ?></h2>
+                    <h2 class="text-info"><?php echo $answered_questions; ?></h2>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card hover-card h-100">
                 <div class="card-body text-center">
                     <img src="https://cdn-icons-png.flaticon.com/512/6188/6188804.png" 
-                         alt="Completion Rate" style="width: 64px; margin-bottom: 15px;">
-                    <h5 class="card-title">Tỷ lệ hoàn thành</h5>
-                    <h2 class="text-info"><?php echo $completion_rate; ?>%</h2>
+                         alt="Expired Questions" style="width: 64px; margin-bottom: 15px;">
+                    <h5 class="card-title">Câu hỏi hết hạn</h5>
+                    <h2 class="text-warning"><?php echo $expired_questions; ?></h2>
                 </div>
             </div>
         </div>
@@ -98,7 +118,7 @@ ob_start();
         <div class="col-md-8">
             <div class="card hover-card">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Tiến độ hoàn thành</h5>
+                    <h5 class="card-title mb-3">Tiến độ hoàn thành (Chỉ tính câu hỏi còn hạn)</h5>
                     <div class="progress" style="height: 25px;">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" 
                              role="progressbar" 

@@ -10,10 +10,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['question_content'])) {
         $question_content = $_POST['question_content'];
         $question_type_id = $_POST['question_type_id'];
+        
+        // Format expiry date to SQL Server datetime format
+        $expiry_date = date('Y-m-d H:i:s', strtotime($_POST['expiry_date']));
 
         // Thêm câu hỏi vào cơ sở dữ liệu
-        $sql_insert = "INSERT INTO CauHoi (NoiDungCauHoi, MaLoaiCauHoi) VALUES (?, ?)";
-        $params_insert = array($question_content, $question_type_id);
+        $sql_insert = "INSERT INTO CauHoi (NoiDungCauHoi, MaLoaiCauHoi, ThoiGianHetHan) VALUES (?, ?, ?)";
+        $params_insert = array($question_content, $question_type_id, $expiry_date);
         $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
 
         if ($stmt_insert === false) {
@@ -52,15 +55,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
                         // Đọc từng dòng dữ liệu
                         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                            if (count($data) >= 2) {
+                            if (count($data) >= 3) {
                                 $question_content = $data[0];
                                 $question_type_id = $data[1];
                                 
+                                // Format expiry date from CSV
+                                $expiry_date = date('Y-m-d H:i:s', strtotime($data[2]));
+                                
                                 // Kiểm tra dữ liệu hợp lệ
-                                if (!empty($question_content) && !empty($question_type_id)) {
+                                if (!empty($question_content) && !empty($question_type_id) && !empty($expiry_date)) {
                                     // Thêm câu hỏi vào cơ sở dữ liệu
-                                    $sql_insert = "INSERT INTO CauHoi (NoiDungCauHoi, MaLoaiCauHoi) VALUES (?, ?)";
-                                    $params_insert = array($question_content, $question_type_id);
+                                    $sql_insert = "INSERT INTO CauHoi (NoiDungCauHoi, MaLoaiCauHoi, ThoiGianHetHan) VALUES (?, ?, ?)";
+                                    $params_insert = array($question_content, $question_type_id, $expiry_date);
                                     $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
                                     
                                     if ($stmt_insert === false) {
@@ -131,7 +137,7 @@ $selected_topic = isset($_GET['topic']) ? $_GET['topic'] : null;
 
 // Truy vấn lấy danh sách câu hỏi theo chủ đề được chọn
 if ($selected_topic) {
-    $sql = "SELECT ch.IdCauHoi, ch.NoiDungCauHoi, ch.MaLoaiCauHoi, lh.ChuDe 
+    $sql = "SELECT ch.IdCauHoi, ch.NoiDungCauHoi, ch.MaLoaiCauHoi, ch.ThoiGianHetHan, lh.ChuDe 
             FROM CauHoi ch 
             JOIN LoaiCauHoi lh ON ch.MaLoaiCauHoi = lh.MaLoaiCauHoi 
             WHERE lh.MaLoaiCauHoi = ?
@@ -157,9 +163,9 @@ function createCSVTemplate() {
     // Kiểm tra nếu file mẫu chưa tồn tại thì tạo mới
     if (!file_exists($templatePath)) {
         $data = array(
-            array('Nội dung câu hỏi', 'Mã loại câu hỏi'),
-            array('Đây là câu hỏi mẫu 1?', '1'),
-            array('Đây là câu hỏi mẫu 2?', '2')
+            array('Nội dung câu hỏi', 'Mã loại câu hỏi', 'Thời gian hết hạn'),
+            array('Đây là câu hỏi mẫu 1?', '1', '2024-12-31 23:59:59'),
+            array('Đây là câu hỏi mẫu 2?', '2', '2024-12-31 23:59:59')
         );
         
         $fp = fopen($templatePath, 'w');
@@ -493,8 +499,8 @@ ob_start();
     }
 </style>
 
-<header class="fade-in">
-    <h1 class="page-title">Quản Lý Câu Hỏi</h1>
+<header>
+    <h1>Quản Lý Câu Hỏi </h1>
 </header>
 
 <div class="card fade-in">
@@ -531,7 +537,6 @@ ob_start();
                     <div class="topic-select">
                         <select style="height: 50px;" name="question_type_id" id="question_type_id" class="form-control" required>
                             <?php 
-                            // Reset con trỏ để đảm bảo đọc từ đầu
                             sqlsrv_free_stmt($result_types);
                             $result_types = sqlsrv_query($conn, $sql_types);
                             while ($type = sqlsrv_fetch_array($result_types, SQLSRV_FETCH_ASSOC)) { 
@@ -540,6 +545,10 @@ ob_start();
                             <?php } ?>
                         </select>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="expiry_date"><i class="fas fa-calendar"></i> Thời gian hết hạn:</label>
+                    <input type="datetime-local" name="expiry_date" id="expiry_date" required class="form-control">
                 </div>
                 <button type="submit" class="btn-submit">
                     <i class="fas fa-plus"></i> Thêm Câu Hỏi
@@ -561,7 +570,7 @@ ob_start();
                     <label for="excel_file"><i class="fas fa-file-upload"></i> Chọn file Excel:</label>
                     <input style="height: 50px;" type="file" name="excel_file" id="excel_file" required class="form-control">
                     <small class="form-text text-muted">
-                        <i class="fas fa-info-circle"></i> File Excel phải có định dạng: Cột A - Nội dung câu hỏi, Cột B - Mã loại câu hỏi
+                        <i class="fas fa-info-circle"></i> File Excel phải có định dạng: Cột A - Nội dung câu hỏi, Cột B - Mã loại câu hỏi, Cột C - Thời gian hết hạn
                     </small>
                 </div>
                 <button type="submit" class="btn-submit">
@@ -572,9 +581,10 @@ ob_start();
             <div class="guide-list">
                 <h5><i class="fas fa-book"></i> Hướng dẫn nhập từ Excel:</h5>
                 <ol>
-                    <li>Tạo file Excel hoặc CSV với 2 cột: Cột A (Nội dung câu hỏi), Cột B (Mã loại câu hỏi)</li>
+                    <li>Tạo file Excel hoặc CSV với 3 cột: Cột A (Nội dung câu hỏi), Cột B (Mã loại câu hỏi), Cột C (Thời gian hết hạn)</li>
                     <li>Dòng đầu tiên là tiêu đề, dữ liệu bắt đầu từ dòng thứ 2</li>
                     <li>Mã loại câu hỏi phải tồn tại trong hệ thống</li>
+                    <li>Thời gian hết hạn phải có định dạng YYYY-MM-DD HH:MM:SS</li>
                     <li>Lưu file dưới định dạng .xlsx, .xls hoặc .csv</li>
                 </ol>
                 <?php
@@ -634,6 +644,7 @@ ob_start();
             <div class="question-item">
                 <p><strong><i class="fas fa-hashtag"></i> ID:</strong> <?php echo $row['IdCauHoi']; ?></p>
                 <p><strong><i class="fas fa-quote-left"></i> Nội Dung:</strong> <?php echo $row['NoiDungCauHoi']; ?></p>
+                <p><strong><i class="fas fa-clock"></i> Thời gian hết hạn:</strong> <?php echo $row['ThoiGianHetHan']->format('Y-m-d H:i:s'); ?></p>
                 <div class="action-links">
                     <a href="edit_question.php?id=<?php echo $row['IdCauHoi']; ?>" class="edit-btn">
                         <i class="fas fa-edit"></i> Sửa

@@ -184,7 +184,7 @@ ob_start();
 </style>
 
 <header>
-    <h1 style="text-align: center; color:White; font-size: 2.5rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #28a745; padding-bottom: 10px;">Quản Lý Loại Câu Hỏi</h1>
+    <h1>Quản Lý Loại Câu Hỏi</h1>
 </header>
 
 <?php if(isset($success_message)): ?>
