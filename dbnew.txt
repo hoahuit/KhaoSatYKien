@@ -1,0 +1,347 @@
+USE [KhaoSatYKien]
+GO
+/****** Object:  Table [dbo].[Admin]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Admin](
+	[MaAdmin] [int] IDENTITY(1,1) NOT NULL,
+	[TenNV] [nvarchar](255) NOT NULL,
+	[NgaySinh] [date] NOT NULL,
+	[GioiTinh] [nvarchar](10) NULL,
+	[SoDienThoai] [varchar](20) NULL,
+	[Mail] [nvarchar](255) NULL,
+	[MaDonVi] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MaAdmin] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[CauHoi]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CauHoi](
+	[IdCauHoi] [int] IDENTITY(1,1) NOT NULL,
+	[NoiDungCauHoi] [nvarchar](1000) NOT NULL,
+	[MaLoaiCauHoi] [int] NULL,
+	[ThoiGianHetHan] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[IdCauHoi] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[DonVi]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[DonVi](
+	[MaDonVi] [int] IDENTITY(1,1) NOT NULL,
+	[TenDonVi] [nvarchar](255) NOT NULL,
+	[LanhDaoDonVi] [nvarchar](255) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MaDonVi] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[KhaoSatSV]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[KhaoSatSV](
+	[IdKhaoSatSV] [int] IDENTITY(1,1) NOT NULL,
+	[IdCauHoi] [int] NULL,
+	[IdPhuongAn] [int] NULL,
+	[MaSV] [int] NULL,
+	[ThoiGian] [datetime] NULL,
+	[YKienRieng] [nvarchar](1000) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[IdKhaoSatSV] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[LoaiCauHoi]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LoaiCauHoi](
+	[MaLoaiCauHoi] [int] IDENTITY(1,1) NOT NULL,
+	[ChuDe] [nvarchar](255) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MaLoaiCauHoi] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Lop]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Lop](
+	[MaLop] [int] IDENTITY(1,1) NOT NULL,
+	[TenLop] [nvarchar](255) NOT NULL,
+	[NganhHoc] [nvarchar](255) NOT NULL,
+	[MaDonVi] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MaLop] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PhuongAnTraLoi]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PhuongAnTraLoi](
+	[IdPhuongAn] [int] IDENTITY(1,1) NOT NULL,
+	[IdCauHoi] [int] NULL,
+	[NoiDungTraLoi] [nvarchar](1000) NOT NULL,
+	[GiaTriTrungBinh] [decimal](3, 2) NULL,
+	[MucDoDanhGia] [nvarchar](50) NULL,
+	[MucYNgia] [nvarchar](100) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[IdPhuongAn] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SinhVien]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SinhVien](
+	[MaSV] [int] IDENTITY(1,1) NOT NULL,
+	[TenSV] [nvarchar](255) NOT NULL,
+	[NgaySinh] [date] NOT NULL,
+	[QueQuan] [nvarchar](255) NULL,
+	[GioiTinh] [nvarchar](10) NULL,
+	[MaLop] [int] NULL,
+	[Mail] [nvarchar](255) NULL,
+	[DienThoai] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MaSV] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TaiKhoan]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TaiKhoan](
+	[MaTK] [int] IDENTITY(1,1) NOT NULL,
+	[TenDangNhap] [varchar](255) NOT NULL,
+	[MatKhau] [varchar](255) NOT NULL,
+	[LoaiNguoiDung] [int] NOT NULL,
+	[MaSV] [int] NULL,
+	[MaAdmin] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[MaTK] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[YKienRiengSV]    Script Date: 09/03/2025 3:29:15 am ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[YKienRiengSV](
+	[IdYKien] [int] IDENTITY(1,1) NOT NULL,
+	[IdKhaoSatSV] [int] NOT NULL,
+	[NoiDungYKien] [nvarchar](1000) NOT NULL,
+	[ThoiGian] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[IdYKien] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[Admin] ON 
+
+INSERT [dbo].[Admin] ([MaAdmin], [TenNV], [NgaySinh], [GioiTinh], [SoDienThoai], [Mail], [MaDonVi]) VALUES (1, N'Hoa dep trai', CAST(N'2002-10-17' AS Date), N'Nam', N'035389349', N'fff@gmail.co', 1)
+SET IDENTITY_INSERT [dbo].[Admin] OFF
+GO
+SET IDENTITY_INSERT [dbo].[CauHoi] ON 
+
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (1, N'Bạn đánh giá thế nào về phương pháp giảng dạy của giảng viên?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (2, N'Phòng học có đáp ứng đầy đủ cơ sở vật chất không?', 2, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (14, N'Bạn có hài lòng với cơ sở vật chất của lớp học không?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (15, N'Giảng viên có hỗ trợ bạn trong quá trình học tập không?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (16, N'Thư viện trường có đủ tài liệu học tập cho bạn không?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (17, N'Bạn có cảm thấy phòng học sạch sẽ và thoải mái không?', 1, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (18, N'Căng tin trường đáp ứng tốt nhu cầu ăn uống của bạn không?', 1, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (19, N'Giảng viên giải thích bài giảng rõ ràng và dễ hiểu không?', 2, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (20, N'Bạn có được khuyến khích đặt câu hỏi trong giờ học không?', 2, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (21, N'Phương pháp giảng dạy có phù hợp với bạn không?', 2, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (22, N'Giảng viên có sử dụng công nghệ hiệu quả trong giảng dạy không?', 2, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (23, N'Bạn có nhận được phản hồi hữu ích từ giảng viên không?', 2, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (24, N'Bạn có hài lòng với dịch vụ tư vấn học tập không?', 3, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (25, N'Nhân viên hành chính hỗ trợ bạn kịp thời không?', 3, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (26, N'Bạn có dễ dàng tiếp cận các hoạt động ngoại khóa không?', 3, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (27, N'Trường có tổ chức đủ sự kiện để kết nối sinh viên không?', 3, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (28, N'Bạn có cảm thấy được hỗ trợ khi gặp khó khăn không?', 3, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (30, N'r444', 1, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (31, N'1', 7, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (32, N'23', 7, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (33, N'43', 7, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (34, N'3', 7, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (35, N'3', 7, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (36, N'4123', 7, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (38, N'Đây là câu hỏi mẫu 1?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (39, N'Đây là câu hỏi mẫu 2?', 2, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (40, N'Đây là câu hỏi mẫu 3?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (41, N'Đây là câu hỏi mẫu 4?', 1, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (42, N'Đây là câu hỏi mẫu 5?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (43, N'Đây là câu hỏi mẫu 6?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (44, N'Đây là câu hỏi mẫu 7?', 1, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (45, N'Đây là câu hỏi mẫu 8?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (46, N'Đây là câu hỏi mẫu 9?', 1, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (47, N'Đây là câu hỏi mẫu 10?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (48, N'123123?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (49, N'1231234?', 1, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (50, N'1231235?', 1, CAST(N'2025-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (51, N'123123?', 4, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (52, N'1231234?', 4, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (53, N'1231235?', 4, CAST(N'2024-10-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (60, N'123', 3, NULL)
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (61, N'1244444444444444444444444444444444444444', 1, NULL)
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (62, N'1244444444444444444444444444444444444444', 1, NULL)
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (66, N'123123', 1, CAST(N'2025-03-08T17:10:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (67, N'123123', 1, CAST(N'2025-03-08T17:10:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (68, N'123123', 1, NULL)
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (70, N'12312312', 7, CAST(N'2025-03-19T17:24:00.000' AS DateTime))
+INSERT [dbo].[CauHoi] ([IdCauHoi], [NoiDungCauHoi], [MaLoaiCauHoi], [ThoiGianHetHan]) VALUES (71, N'12312312', 7, CAST(N'2025-03-19T17:24:00.000' AS DateTime))
+SET IDENTITY_INSERT [dbo].[CauHoi] OFF
+GO
+SET IDENTITY_INSERT [dbo].[DonVi] ON 
+
+INSERT [dbo].[DonVi] ([MaDonVi], [TenDonVi], [LanhDaoDonVi]) VALUES (1, N'Phòng Đào tạo', N'Nguyễn Văn A')
+INSERT [dbo].[DonVi] ([MaDonVi], [TenDonVi], [LanhDaoDonVi]) VALUES (2, N'Phòng Công tác sinh viên', N'Trần Thị B')
+INSERT [dbo].[DonVi] ([MaDonVi], [TenDonVi], [LanhDaoDonVi]) VALUES (3, N'Khoa Công nghệ thông tin', N'Phạm Văn C')
+SET IDENTITY_INSERT [dbo].[DonVi] OFF
+GO
+SET IDENTITY_INSERT [dbo].[KhaoSatSV] ON 
+
+INSERT [dbo].[KhaoSatSV] ([IdKhaoSatSV], [IdCauHoi], [IdPhuongAn], [MaSV], [ThoiGian], [YKienRieng]) VALUES (1088, 51, 23, 5, CAST(N'2025-03-02T16:34:13.013' AS DateTime), NULL)
+INSERT [dbo].[KhaoSatSV] ([IdKhaoSatSV], [IdCauHoi], [IdPhuongAn], [MaSV], [ThoiGian], [YKienRieng]) VALUES (1089, 52, 27, 7, CAST(N'2025-03-02T16:34:13.030' AS DateTime), NULL)
+INSERT [dbo].[KhaoSatSV] ([IdKhaoSatSV], [IdCauHoi], [IdPhuongAn], [MaSV], [ThoiGian], [YKienRieng]) VALUES (1090, 53, 27, 6, CAST(N'2025-03-02T16:34:13.030' AS DateTime), NULL)
+INSERT [dbo].[KhaoSatSV] ([IdKhaoSatSV], [IdCauHoi], [IdPhuongAn], [MaSV], [ThoiGian], [YKienRieng]) VALUES (1091, 2, 27, 5, CAST(N'2025-03-09T02:50:52.287' AS DateTime), N'1322')
+SET IDENTITY_INSERT [dbo].[KhaoSatSV] OFF
+GO
+SET IDENTITY_INSERT [dbo].[LoaiCauHoi] ON 
+
+INSERT [dbo].[LoaiCauHoi] ([MaLoaiCauHoi], [ChuDe]) VALUES (1, N'1')
+INSERT [dbo].[LoaiCauHoi] ([MaLoaiCauHoi], [ChuDe]) VALUES (2, N'Cơ sở vật chất')
+INSERT [dbo].[LoaiCauHoi] ([MaLoaiCauHoi], [ChuDe]) VALUES (3, N'Môi trường học tập')
+INSERT [dbo].[LoaiCauHoi] ([MaLoaiCauHoi], [ChuDe]) VALUES (4, N'Chất lượng giảng dạy 2')
+INSERT [dbo].[LoaiCauHoi] ([MaLoaiCauHoi], [ChuDe]) VALUES (5, N'Hỗ trợ sinh viên')
+INSERT [dbo].[LoaiCauHoi] ([MaLoaiCauHoi], [ChuDe]) VALUES (7, N'123')
+SET IDENTITY_INSERT [dbo].[LoaiCauHoi] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Lop] ON 
+
+INSERT [dbo].[Lop] ([MaLop], [TenLop], [NganhHoc], [MaDonVi]) VALUES (1, N'Kỹ thuật phần mềm 01', N'Kỹ thuật phần mềm', 3)
+INSERT [dbo].[Lop] ([MaLop], [TenLop], [NganhHoc], [MaDonVi]) VALUES (2, N'Hệ thống thông tin 02', N'Hệ thống thông tin', 3)
+INSERT [dbo].[Lop] ([MaLop], [TenLop], [NganhHoc], [MaDonVi]) VALUES (3, N'Trí tuệ nhân tạo 01', N'Trí tuệ nhân tạo', 3)
+SET IDENTITY_INSERT [dbo].[Lop] OFF
+GO
+SET IDENTITY_INSERT [dbo].[PhuongAnTraLoi] ON 
+
+INSERT [dbo].[PhuongAnTraLoi] ([IdPhuongAn], [IdCauHoi], [NoiDungTraLoi], [GiaTriTrungBinh], [MucDoDanhGia], [MucYNgia]) VALUES (23, NULL, N'Hoàn toàn không đồng ý', CAST(1.00 AS Decimal(3, 2)), N'Hoàn toàn không đồng ý', N'Hoàn toàn không đồng ý')
+INSERT [dbo].[PhuongAnTraLoi] ([IdPhuongAn], [IdCauHoi], [NoiDungTraLoi], [GiaTriTrungBinh], [MucDoDanhGia], [MucYNgia]) VALUES (24, NULL, N'Không đồng ý', CAST(2.00 AS Decimal(3, 2)), N'Không đồng ý', N'Không đồng ý')
+INSERT [dbo].[PhuongAnTraLoi] ([IdPhuongAn], [IdCauHoi], [NoiDungTraLoi], [GiaTriTrungBinh], [MucDoDanhGia], [MucYNgia]) VALUES (25, NULL, N'Đồng ý một phần', CAST(3.00 AS Decimal(3, 2)), N'Đồng ý một phần', N'Đồng ý một phần')
+INSERT [dbo].[PhuongAnTraLoi] ([IdPhuongAn], [IdCauHoi], [NoiDungTraLoi], [GiaTriTrungBinh], [MucDoDanhGia], [MucYNgia]) VALUES (26, NULL, N'Đồng ý', CAST(4.00 AS Decimal(3, 2)), N'Đồng ý', N'Đồng ý')
+INSERT [dbo].[PhuongAnTraLoi] ([IdPhuongAn], [IdCauHoi], [NoiDungTraLoi], [GiaTriTrungBinh], [MucDoDanhGia], [MucYNgia]) VALUES (27, NULL, N'Hoàn toàn đồng ý', CAST(5.00 AS Decimal(3, 2)), N'Hoàn toàn đồng ý', N'Hoàn toàn đồng ý')
+SET IDENTITY_INSERT [dbo].[PhuongAnTraLoi] OFF
+GO
+SET IDENTITY_INSERT [dbo].[SinhVien] ON 
+
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (5, N'Nguyễn Văn D', CAST(N'2002-05-12' AS Date), N'Hà Nội', N'Nam', 1, N'nguyenvand@gmail.com', N'0123456789')
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (6, N'Trần Thị E', CAST(N'2001-11-23' AS Date), N'Đà Nẵng', N'Nữ', 2, N'tranthie@gmail.com', N'0987654321')
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (7, N'Lê Quốc F', CAST(N'2003-08-19' AS Date), N'TP. HCM', N'Nam', 3, N'lequocf@gmail.com', N'0369852147')
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (8, N'123123', CAST(N'2002-10-10' AS Date), N'123123', N'Nam', 1, N'kinggynstar@gmail.com', N'123123')
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (1008, N'444', CAST(N'2002-10-10' AS Date), NULL, N'Nam', 1, N'4@gmail.com', N'4')
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (1009, N'444', CAST(N'0001-01-01' AS Date), NULL, N'Nam', 1, N'444@gmail.com', N'44')
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (1010, N'444', CAST(N'2002-11-11' AS Date), NULL, N'Nam', 1, N'kinggynstar@gmail.com', N'444')
+INSERT [dbo].[SinhVien] ([MaSV], [TenSV], [NgaySinh], [QueQuan], [GioiTinh], [MaLop], [Mail], [DienThoai]) VALUES (1011, N'123123', CAST(N'1900-01-01' AS Date), NULL, N'Nam', 1, N'123@gmail.com', N'123123')
+SET IDENTITY_INSERT [dbo].[SinhVien] OFF
+GO
+SET IDENTITY_INSERT [dbo].[TaiKhoan] ON 
+
+INSERT [dbo].[TaiKhoan] ([MaTK], [TenDangNhap], [MatKhau], [LoaiNguoiDung], [MaSV], [MaAdmin]) VALUES (1, N'1', N'1', 1, 5, NULL)
+INSERT [dbo].[TaiKhoan] ([MaTK], [TenDangNhap], [MatKhau], [LoaiNguoiDung], [MaSV], [MaAdmin]) VALUES (2, N'2', N'2', 2, NULL, 1)
+INSERT [dbo].[TaiKhoan] ([MaTK], [TenDangNhap], [MatKhau], [LoaiNguoiDung], [MaSV], [MaAdmin]) VALUES (18, N'12344555', N'1234444', 1, 1011, NULL)
+INSERT [dbo].[TaiKhoan] ([MaTK], [TenDangNhap], [MatKhau], [LoaiNguoiDung], [MaSV], [MaAdmin]) VALUES (23, N'4', N'4', 1, 6, NULL)
+INSERT [dbo].[TaiKhoan] ([MaTK], [TenDangNhap], [MatKhau], [LoaiNguoiDung], [MaSV], [MaAdmin]) VALUES (24, N'5', N'5', 1, 7, NULL)
+SET IDENTITY_INSERT [dbo].[TaiKhoan] OFF
+GO
+SET IDENTITY_INSERT [dbo].[YKienRiengSV] ON 
+
+INSERT [dbo].[YKienRiengSV] ([IdYKien], [IdKhaoSatSV], [NoiDungYKien], [ThoiGian]) VALUES (1, 1091, N'1322', CAST(N'2025-03-09T02:50:52.290' AS DateTime))
+SET IDENTITY_INSERT [dbo].[YKienRiengSV] OFF
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [UQ__TaiKhoan__55F68FC08D4C53DF]    Script Date: 09/03/2025 3:29:15 am ******/
+ALTER TABLE [dbo].[TaiKhoan] ADD UNIQUE NONCLUSTERED 
+(
+	[TenDangNhap] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[KhaoSatSV] ADD  DEFAULT (getdate()) FOR [ThoiGian]
+GO
+ALTER TABLE [dbo].[TaiKhoan] ADD  DEFAULT ((1)) FOR [LoaiNguoiDung]
+GO
+ALTER TABLE [dbo].[YKienRiengSV] ADD  DEFAULT (getdate()) FOR [ThoiGian]
+GO
+ALTER TABLE [dbo].[Admin]  WITH CHECK ADD FOREIGN KEY([MaDonVi])
+REFERENCES [dbo].[DonVi] ([MaDonVi])
+GO
+ALTER TABLE [dbo].[CauHoi]  WITH CHECK ADD  CONSTRAINT [FK__CauHoi__MaLoaiCa__49C3F6B7] FOREIGN KEY([MaLoaiCauHoi])
+REFERENCES [dbo].[LoaiCauHoi] ([MaLoaiCauHoi])
+GO
+ALTER TABLE [dbo].[CauHoi] CHECK CONSTRAINT [FK__CauHoi__MaLoaiCa__49C3F6B7]
+GO
+ALTER TABLE [dbo].[KhaoSatSV]  WITH CHECK ADD  CONSTRAINT [FK__KhaoSatSV__IdCau__4F7CD00D] FOREIGN KEY([IdCauHoi])
+REFERENCES [dbo].[CauHoi] ([IdCauHoi])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[KhaoSatSV] CHECK CONSTRAINT [FK__KhaoSatSV__IdCau__4F7CD00D]
+GO
+ALTER TABLE [dbo].[KhaoSatSV]  WITH CHECK ADD FOREIGN KEY([IdPhuongAn])
+REFERENCES [dbo].[PhuongAnTraLoi] ([IdPhuongAn])
+GO
+ALTER TABLE [dbo].[KhaoSatSV]  WITH CHECK ADD FOREIGN KEY([MaSV])
+REFERENCES [dbo].[SinhVien] ([MaSV])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Lop]  WITH CHECK ADD FOREIGN KEY([MaDonVi])
+REFERENCES [dbo].[DonVi] ([MaDonVi])
+GO
+ALTER TABLE [dbo].[PhuongAnTraLoi]  WITH CHECK ADD  CONSTRAINT [FK__PhuongAnT__IdCau__4CA06362] FOREIGN KEY([IdCauHoi])
+REFERENCES [dbo].[CauHoi] ([IdCauHoi])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[PhuongAnTraLoi] CHECK CONSTRAINT [FK__PhuongAnT__IdCau__4CA06362]
+GO
+ALTER TABLE [dbo].[SinhVien]  WITH CHECK ADD FOREIGN KEY([MaLop])
+REFERENCES [dbo].[Lop] ([MaLop])
+GO
+ALTER TABLE [dbo].[YKienRiengSV]  WITH CHECK ADD FOREIGN KEY([IdKhaoSatSV])
+REFERENCES [dbo].[KhaoSatSV] ([IdKhaoSatSV])
+ON DELETE CASCADE
+GO

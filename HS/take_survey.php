@@ -31,19 +31,43 @@ $user_type = $user_info['LoaiNguoiDung'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $answers = isset($_POST["answers"]) ? $_POST["answers"] : array();
+    $opinions = isset($_POST["opinions"]) ? $_POST["opinions"] : array();
     
     foreach ($answers as $question_id => $selected_answer) {
-        $params = array($question_id, $selected_answer);
+        $opinion = isset($opinions[$question_id]) ? $opinions[$question_id] : null;
+        
+        // Nếu ý kiến trống, đặt thành NULL
+        if (empty(trim($opinion))) {
+            $opinion = null;
+        }
         
         if ($user_type == 1) {
-            $params[] = $user_info['MaSV'];
-            $sql_insert = "INSERT INTO KhaoSatSV (IdCauHoi, IdPhuongAn, MaSV, ThoiGian) VALUES (?, ?, ?, GETDATE())";
-        
-        }
-
-        $stmt_insert = sqlsrv_query($conn, $sql_insert, $params);
-        if ($stmt_insert === false) {
-            die(print_r(sqlsrv_errors(), true));
+            // Thêm câu trả lời vào KhaoSatSV với YKienRieng
+            $sql_insert = "INSERT INTO KhaoSatSV (IdCauHoi, IdPhuongAn, MaSV, ThoiGian, YKienRieng) 
+                          VALUES (?, ?, ?, GETDATE(), ?); SELECT SCOPE_IDENTITY() AS LastID;";
+            $params = array($question_id, $selected_answer, $user_info['MaSV'], $opinion);
+            
+            $stmt_insert = sqlsrv_query($conn, $sql_insert, $params);
+            if ($stmt_insert === false) {
+                die(print_r(sqlsrv_errors(), true));
+            }
+            
+            // Lấy ID của bản ghi vừa thêm
+            if (sqlsrv_next_result($stmt_insert)) {
+                $row = sqlsrv_fetch_array($stmt_insert, SQLSRV_FETCH_ASSOC);
+                $khaosat_id = $row['LastID'];
+                
+                // Nếu có ý kiến riêng chi tiết, thêm vào bảng YKienRiengSV
+                if ($opinion !== null) {
+                    $sql_insert_opinion = "INSERT INTO YKienRiengSV (IdKhaoSatSV, NoiDungYKien) VALUES (?, ?)";
+                    $params_opinion = array($khaosat_id, $opinion);
+                    
+                    $stmt_insert_opinion = sqlsrv_query($conn, $sql_insert_opinion, $params_opinion);
+                    if ($stmt_insert_opinion === false) {
+                        die(print_r(sqlsrv_errors(), true));
+                    }
+                }
+            }
         }
     }
 
@@ -123,6 +147,25 @@ ob_start();
                             </div>
                         <?php endforeach; ?>
                     </div>
+                    
+                    <!-- Thêm phần ý kiến riêng -->
+                    <div class="mt-3">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" 
+                                   id="hasOpinion<?php echo $question['IdCauHoi']; ?>" 
+                                   onchange="toggleOpinionField(<?php echo $question['IdCauHoi']; ?>)">
+                            <label class="form-check-label" for="hasOpinion<?php echo $question['IdCauHoi']; ?>">
+                                <i class="fas fa-comment-alt me-2"></i>Tôi có ý kiến riêng về câu hỏi này
+                            </label>
+                        </div>
+                        <div id="opinionContainer<?php echo $question['IdCauHoi']; ?>" style="display: none;">
+                            <textarea class="form-control" 
+                                      id="opinion<?php echo $question['IdCauHoi']; ?>" 
+                                      name="opinions[<?php echo $question['IdCauHoi']; ?>]" 
+                                      rows="3" 
+                                      placeholder="Nhập ý kiến riêng của bạn về câu hỏi này"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -141,7 +184,26 @@ ob_start();
 .form-check-label {
     cursor: pointer;
 }
+textarea.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
 </style>
+
+<script>
+function toggleOpinionField(questionId) {
+    var checkbox = document.getElementById('hasOpinion' + questionId);
+    var container = document.getElementById('opinionContainer' + questionId);
+    var textarea = document.getElementById('opinion' + questionId);
+    
+    if (checkbox.checked) {
+        container.style.display = 'block';
+    } else {
+        container.style.display = 'none';
+        textarea.value = ''; // Xóa nội dung khi bỏ chọn
+    }
+}
+</script>
 
 <?php
 $content = ob_get_clean();

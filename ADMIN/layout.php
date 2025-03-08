@@ -397,6 +397,9 @@
         <a href="tabthongke.php" <?php echo basename($_SERVER['PHP_SELF']) == 'tabthongke.php' ? 'class="active"' : ''; ?>>
             <i class="fas fa-cog"></i> <span>Thống kê</span>
         </a>
+        <a href="student_surveys.php" <?php echo basename($_SERVER['PHP_SELF']) == 'student_surveys.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-users"></i> <span>Khảo sát SV</span>
+        </a>
         <a href="logout.php">
             <i class="fas fa-sign-out-alt"></i> <span>Đăng xuất</span>
         </a>

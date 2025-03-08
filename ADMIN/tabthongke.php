@@ -141,11 +141,38 @@ foreach ($questions as $questionId => $questionText) {
         $avg_score = round($total_weighted_responses / $total_responses, 2);
     }
     
+    // Lấy ý kiến riêng cho câu hỏi này
+    $sql_opinions = "SELECT s.TenSV, s.MaSV, k.YKienRieng, k.ThoiGian, p.NoiDungTraLoi
+                    FROM KhaoSatSV k
+                    JOIN SinhVien s ON k.MaSV = s.MaSV
+                    JOIN PhuongAnTraLoi p ON k.IdPhuongAn = p.IdPhuongAn
+                    WHERE k.IdCauHoi = ? AND k.YKienRieng IS NOT NULL AND k.YKienRieng <> ''
+                    ORDER BY k.ThoiGian DESC";
+    $params = array($questionId);
+    $result_opinions = sqlsrv_query($conn, $sql_opinions, $params);
+    
+    if ($result_opinions === false) {
+        die("Query failed: " . print_r(sqlsrv_errors(), true));
+    }
+    
+    $opinions = [];
+    while ($row = sqlsrv_fetch_array($result_opinions, SQLSRV_FETCH_ASSOC)) {
+        $opinions[] = [
+            'student_name' => $row['TenSV'],
+            'student_id' => $row['MaSV'],
+            'opinion' => $row['YKienRieng'],
+            'time' => $row['ThoiGian'],
+            'answer' => $row['NoiDungTraLoi']
+        ];
+    }
+    
     $statistics[$questionId] = [
         'question' => $questionText,
         'total' => $total_responses,
         'options' => $options,
-        'avg_score' => $avg_score
+        'avg_score' => $avg_score,
+        'opinions' => $opinions,
+        'opinions_count' => count($opinions)
     ];
 }
 
@@ -226,6 +253,16 @@ ob_start();
                     <span class="summary-label">Điểm trung bình</span>
                 </div>
             </div>
+            
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+                <div class="summary-data">
+                    <span class="summary-value"><?php echo array_sum(array_column($statistics, 'opinions_count')); ?></span>
+                    <span class="summary-label">Ý kiến riêng</span>
+                </div>
+            </div>
         </div>
 
         <h3 class="section-title"><i class="fas fa-poll me-2"></i>Kết Quả Phản Hồi Chi Tiết</h3>
@@ -246,6 +283,10 @@ ob_start();
                         <div class="meta-item">
                             <i class="fas fa-star me-2"></i>
                             <span>Điểm TB: <strong><?php echo $data['avg_score']; ?>/5</strong></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-comment-dots me-2"></i>
+                            <span><?php echo $data['opinions_count']; ?> ý kiến riêng</span>
                         </div>
                     </div>
                 </div>
@@ -286,6 +327,38 @@ ob_start();
                     </div>
                     <?php endforeach; ?>
                 </div>
+                
+                <?php if (!empty($data['opinions'])): ?>
+                <div class="opinions-container mt-4">
+                    <h5 class="opinions-title">
+                        <i class="fas fa-comment-dots me-2"></i>Ý kiến riêng của sinh viên
+                    </h5>
+                    
+                    <div class="opinions-list">
+                        <?php foreach ($data['opinions'] as $opinion): ?>
+                        <div class="opinion-item">
+                            <div class="opinion-header">
+                                <div class="student-info">
+                                    <span class="student-name"><?php echo htmlspecialchars($opinion['student_name']); ?></span>
+                                    <span class="student-id">(<?php echo htmlspecialchars($opinion['student_id']); ?>)</span>
+                                </div>
+                                <div class="opinion-time">
+                                    <i class="far fa-clock me-1"></i>
+                                    <?php echo $opinion['time']->format('d/m/Y H:i'); ?>
+                                </div>
+                            </div>
+                            <div class="opinion-answer">
+                                <span class="answer-label">Đã chọn:</span>
+                                <span class="answer-text"><?php echo htmlspecialchars($opinion['answer']); ?></span>
+                            </div>
+                            <div class="opinion-content">
+                                <?php echo htmlspecialchars($opinion['opinion']); ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
             <?php endforeach; ?>
         </div>
@@ -639,6 +712,82 @@ sqlsrv_close($conn);
     font-weight: 600;
     transition: width 1s ease;
     border-radius: 50px;
+}
+
+/* Styles for opinions */
+.opinions-container {
+    margin-top: 2rem;
+    border-top: 1px solid var(--gray-300);
+    padding-top: 1.5rem;
+}
+
+.opinions-title {
+    font-size: 1.1rem;
+    color: var(--gray-700);
+    margin-bottom: 1rem;
+}
+
+.opinions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.opinion-item {
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.opinion-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.student-name {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.student-id {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+}
+
+.opinion-time {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+}
+
+.opinion-answer {
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    background-color: rgba(67, 97, 238, 0.1);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.answer-label {
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
+
+.opinion-content {
+    color: var(--gray-800);
+    line-height: 1.5;
+    white-space: pre-line;
 }
 
 /* Responsive */
