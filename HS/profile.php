@@ -300,89 +300,10 @@ ob_start();
         </div>
     <?php endif; ?>
     
-    <div class="profile-tabs">
-        <button class="profile-tab active" onclick="openTab('info')">Thông tin cá nhân</button>
-        <button class="profile-tab" onclick="openTab('password')">Đổi mật khẩu</button>
-    </div>
-    
-    <div class="profile-card">
-        <!-- Tab thông tin cá nhân -->
-        <div id="info" class="tab-content active">
-            <div class="profile-card-header">
-                <i class="fas fa-user"></i> Thông tin cá nhân
-            </div>
-            <div class="profile-card-body">
-                <form method="POST" action="">
-                    <div class="profile-info">
-                        <div class="form-group">
-                            <label for="ten_sv">Họ và tên:</label>
-                            <input type="text" id="ten_sv" name="ten_sv" class="form-control" 
-                                   value="<?php echo isset($user_data['TenSV']) ? $user_data['TenSV'] : ''; ?>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="ngay_sinh">Ngày sinh:</label>
-                            <input type="date" id="ngay_sinh" name="ngay_sinh" class="form-control" 
-                                   value="<?php echo $ngay_sinh_display; ?>" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="gioi_tinh">Giới tính:</label>
-                            <select id="gioi_tinh" name="gioi_tinh" class="form-control">
-                                <option value="">-- Chọn giới tính --</option>
-                                <option value="Nam" <?php echo (isset($user_data['GioiTinh']) && $user_data['GioiTinh'] == 'Nam') ? 'selected' : ''; ?>>Nam</option>
-                                <option value="Nữ" <?php echo (isset($user_data['GioiTinh']) && $user_data['GioiTinh'] == 'Nữ') ? 'selected' : ''; ?>>Nữ</option>
-                                <option value="Khác" <?php echo (isset($user_data['GioiTinh']) && $user_data['GioiTinh'] == 'Khác') ? 'selected' : ''; ?>>Khác</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="que_quan">Quê quán:</label>
-                            <input type="text" id="que_quan" name="que_quan" class="form-control" 
-                                   value="<?php echo isset($user_data['QueQuan']) ? $user_data['QueQuan'] : ''; ?>">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="ma_lop">Lớp:</label>
-                            <select id="ma_lop" name="ma_lop" class="form-control">
-                                <option value="">-- Chọn lớp --</option>
-                                <?php 
-                                // Reset con trỏ để đọc từ đầu
-                                sqlsrv_free_stmt($stmt_lop);
-                                $stmt_lop = sqlsrv_query($conn, $sql_lop);
-                                
-                                while ($lop = sqlsrv_fetch_array($stmt_lop, SQLSRV_FETCH_ASSOC)) { 
-                                ?>
-                                    <option value="<?php echo $lop['MaLop']; ?>" 
-                                            <?php echo (isset($user_data['MaLop']) && $user_data['MaLop'] == $lop['MaLop']) ? 'selected' : ''; ?>>
-                                        <?php echo $lop['TenLop']; ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="mail">Email:</label>
-                            <input type="email" id="mail" name="mail" class="form-control" 
-                                   value="<?php echo isset($user_data['Mail']) ? $user_data['Mail'] : ''; ?>">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="dien_thoai">Số điện thoại:</label>
-                            <input type="tel" id="dien_thoai" name="dien_thoai" class="form-control" 
-                                   value="<?php echo isset($user_data['DienThoai']) ? $user_data['DienThoai'] : ''; ?>">
-                        </div>
-                    </div>
-                    
-                    <button type="submit" name="update_profile" class="btn-primary">
-                        <i class="fas fa-save"></i> Cập nhật thông tin
-                    </button>
-                </form>
-            </div>
-        </div>
-        
+
+ 
         <!-- Tab đổi mật khẩu -->
-        <div id="password" class="tab-content">
+        <div id="password">
             <div class="profile-card-header">
                 <i class="fas fa-key"></i> Đổi mật khẩu
             </div>
@@ -409,34 +330,13 @@ ob_start();
                 </form>
             </div>
         </div>
-    </div>
 </div>
 
-<script>
-    function openTab(tabName) {
-        // Ẩn tất cả các tab content
-        var tabContents = document.getElementsByClassName('tab-content');
-        for (var i = 0; i < tabContents.length; i++) {
-            tabContents[i].classList.remove('active');
-        }
-        
-        // Bỏ active khỏi tất cả các tab
-        var tabs = document.getElementsByClassName('profile-tab');
-        for (var i = 0; i < tabs.length; i++) {
-            tabs[i].classList.remove('active');
-        }
-        
-        // Hiển thị tab được chọn
-        document.getElementById(tabName).classList.add('active');
-        
-        // Đánh dấu tab được chọn là active
-        event.currentTarget.classList.add('active');
-    }
-</script>
+
 
 <?php
 $content = ob_get_clean();
-include '../ADMIN/layout.php';
+include 'layout.php';
 
 // Giải phóng tài nguyên
 if ($stmt && gettype($stmt) === 'resource') {
